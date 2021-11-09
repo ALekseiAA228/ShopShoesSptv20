@@ -42,6 +42,6 @@ public class Purchase implements Serializable{
     public void setGivenShoes(Date givenShoes) {
         this.givenShoes = givenShoes;
     }
-    
-            
-}
+
+    }
+   

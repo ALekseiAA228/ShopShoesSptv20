@@ -8,6 +8,7 @@ package tools;
 import entity.Shoes;
 import entity.Purchase;
 import entity.Customer;
+import entity.Income;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -131,5 +132,44 @@ public class SaverToFiles implements Keepeing{
         }
         return purchases;
     }
-    
+
+    @Override
+    public void saveIncomes(List<Income> incomes) {
+        FileOutputStream fos = null;
+        ObjectOutputStream oos = null;
+        try {
+            fos = new FileOutputStream("incomes");
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(incomes);
+            oos.flush();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "Нет файла shoeses", ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "Ошибка ввода", ex);
+        }
+    }
+
+    @Override
+    public List<Income> loadIncomes() {
+        List<Income> incomes = new ArrayList<>();
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        try {
+            fis = new FileInputStream("incomes");
+            ois = new ObjectInputStream(fis);
+            incomes = (List<Income>) ois.readObject();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "shoeses еше не создан", ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "Ошибка чтения", ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "Нет такого файла", ex);
+            
+        }
+        if (incomes==null) {
+            incomes = new ArrayList<>();
+            
+        }
+        return incomes;
+    }
 }

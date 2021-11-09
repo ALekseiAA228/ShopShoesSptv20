@@ -6,6 +6,7 @@
 package myclasses;
 
 import entity.Customer;
+import entity.Income;
 import entity.Purchase;
 import entity.Shoes;
 import java.util.ArrayList;
@@ -20,12 +21,16 @@ public class App {
     private List<Shoes> shoeses = new ArrayList<>();
     private List<Customer> customers = new ArrayList<>();
     private List<Purchase> purchases = new ArrayList<>();
+    private List<Income> incomes = new ArrayList<>();
     private SaverToFiles saverToFiles = new SaverToFiles();
+    Income income = new Income();
     
     public App(){
         shoeses = saverToFiles.loadShoeses();
         customers = saverToFiles.loadCustomers();
         purchases = saverToFiles.loadPurchases();
+        incomes = saverToFiles.loadIncomes();
+
     }
     
     public void run(){
@@ -61,7 +66,7 @@ public class App {
                    givenShoes();
                    break;
                case 6:
-                   printMoneyList();
+                   incomes();
                    break;
                case 7:
                    addMoney();
@@ -140,54 +145,42 @@ public class App {
         System.out.println("Покупателей нет!");
     }
 }
-    private void givenShoes() {
-        System.out.println("---- купить обувь ----");
-       System.out.println("Список обуви: ");
-       int n = 0;
-       for (int i = 0; i < shoeses.size(); i++) {
-          if(shoeses.get(i) != null && shoeses.get(i).getCount() > 0){
-               System.out.printf("%d. %s. %s. %d.%n"
-                       ,i+1
-                       ,shoeses.get(i).getShoesName()
-                       ,shoeses.get(i).getPrice()
-                       ,shoeses.get(i).getCount()
-               );
-               n++;
-          }
-       }
-       if(n < 1){
-           System.out.println("Нет обуви для покупки");
-           return;
-       }
-       System.out.println("Выберите номер обуви: ");
-       int numberShoes = scanner.nextInt(); scanner.nextLine();
-
-       System.out.println("Список покупателей: ");
-       for (int i = 0; i < customers.size(); i++) {
-          if(customers.get(i) != null){
-               System.out.printf("%d. %s. %s. Телефон: %s.%n"
-                       ,i+1
-                       ,customers.get(i).getFirstname()
-                       ,customers.get(i).getLastname()
-                       ,customers.get(i).getPhone()
-                       ,customers.get(i).getMoney()
-               );
-          }
-       }
-       System.out.println("Выбор покупателя: ");
-       int numberCustomer = scanner.nextInt(); scanner.nextLine();
-
-       Purchase purchase = new Purchase();
-       purchase.setShoes(shoeses.get(numberShoes - 1));
-       purchase.setCustomer(customers.get(numberCustomer - 1));
-       Calendar c = new GregorianCalendar();
-       purchase.setGivenShoes(c.getTime());
-       purchase.getShoes().setCount(purchase.getShoes().getCount() - 1);
-       purchases.add(purchase);
-       saverToFiles.saveShoeses(shoeses);
-       saverToFiles.savePurchases(purchases);
-       System.out.println("--------------------");
+private void givenShoes() {
+    System.out.println("*ПОКУПКА ОБУВИ*"); 
+    System.out.println("-----------------------------");
+    printListShoeses();
+    System.out.print("Выберите нужную модель обуви:");
+    int shoesNum= scanner.nextInt(); scanner.nextLine();
+    System.out.println("-----------------------------");
+    printListCustomers();
+    System.out.print("Выберите нужного покупателя: ");
+    int customerNum= scanner.nextInt(); scanner.nextLine();
+    Purchase purchase= new Purchase();
+    purchase.setShoes(shoeses.get(shoesNum-1));
+    purchase.setCustomer(customers.get(customerNum-1));
+    Calendar c = new GregorianCalendar();
+    purchase.setGivenShoes(c.getTime());
+    if(purchase.getCustomer().getMoney()>=purchase.getShoes().getPrice()){
+        System.out.println("-----------------------------");
+        System.out.printf("Кроссовки %s купил %s %s за %s евро %s%n",
+        purchase.getShoes().getShoesName(),
+        purchase.getCustomer().getFirstname(),
+        purchase.getCustomer().getLastname(),
+        purchase.getShoes().getPrice(),
+        purchase.getGivenShoes()
+        );
+        purchase.getCustomer().setMoney(purchase.getCustomer().getMoney()-purchase.getShoes().getPrice());
+        income.setGeneralMoney(income.getGeneralMoney()+purchase.getShoes().getPrice());
+        purchase.getShoes().setQuantity(purchase.getShoes().getQuantity()-1);
+        purchases.add(purchase);
+        incomes.add(income);
+        saverToFiles.saveCustomers(customers);
+        saverToFiles.saveIncomes(incomes);
+        saverToFiles.savePurchases(purchases);
+    }else{
+        System.out.println("Этот пользователь не может совершить покупку, так как у него не хватает денег!");
     }
+}
 
     private void addMoney() {
     System.out.println("*ДОБАВИТЬ ДЕНЬГИ ПОКУПАТЕЛЮ*");
@@ -197,6 +190,17 @@ public class App {
     System.out.print("Введите сколько денег вы хотите добавить этому покупателю: ");
     int add= scanner.nextInt(); scanner.nextLine();
     customers.get(choice-1).setMoney(customers.get(choice-1).getMoney()+add);
+    saverToFiles.saveCustomers(customers);
     }
+    private void incomes(){
+    System.out.println("*ДОХОД МАГАЗИНА*");
+    int sum=0;
+        for (int i = 0; i < incomes.size(); i++) {
+            sum +=incomes.get(i).getGeneralMoney();
+            
+        }
+    System.out.printf("Выручка магазина составляет: %s Евро ",sum);
+}
+
 }
 
