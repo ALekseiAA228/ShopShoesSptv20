@@ -171,9 +171,10 @@ private void givenShoes() {
         );
         purchase.getCustomer().setMoney(purchase.getCustomer().getMoney()-purchase.getShoes().getPrice());
         income.setGeneralMoney(income.getGeneralMoney()+purchase.getShoes().getPrice());
-        purchase.getShoes().setQuantity(purchase.getShoes().getQuantity()-1);
+        purchase.getShoes().setCount(purchase.getShoes().getCount() - 1);
         purchases.add(purchase);
         incomes.add(income);
+        saverToFiles.saveShoeses(shoeses);
         saverToFiles.saveCustomers(customers);
         saverToFiles.saveIncomes(incomes);
         saverToFiles.savePurchases(purchases);
