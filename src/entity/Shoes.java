@@ -6,22 +6,31 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
  * @author user
  */
+@Entity
 public class Shoes implements Serializable{
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String shoesName;
-    private int count;
     private int price;
     private int quantity;
-    
+    private int count;
+
+    public Shoes() {
+    }
 
     public String getShoesName() {
         return shoesName;
     }
-
 
     public void setShoesName(String shoesName) {
         this.shoesName = shoesName;
@@ -30,16 +39,24 @@ public class Shoes implements Serializable{
     public int getPrice() {
         return price;
     }
-    
+
     public void setPrice(int price) {
         this.price = price;
-    }    
-    public void setCount(int count) {
-        this.count = count;
     }
-    public int getCount() {
-        return count;
+
+
+    @Override
+    public String toString() {
+        return "Shoes{" 
+                + "shoesName=" + shoesName 
+                + ", price=" + price  
+                + ", quantity=" + quantity 
+                + ", count=" + count 
+                + '}';
     }
+
+    
+
     public int getQuantity() {
         return quantity;
     }
@@ -48,15 +65,21 @@ public class Shoes implements Serializable{
         this.quantity = quantity;
     }
 
-
-    @Override
-    public String toString() {
-        return "Book{" 
-                + "shoesName=" + shoesName 
-                + ", price=" + price
-                + ", count=" + count
-                + '}';
+    public int getCount() {
+        return count;
     }
 
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     
 }

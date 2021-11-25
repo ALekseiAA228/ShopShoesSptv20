@@ -6,13 +6,21 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
  * @author user
  */
 
-    public class Customer implements Serializable {
+    @Entity
+    public class Customer implements Serializable{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String firstname;
     private String lastname;
     private String phone;
@@ -21,6 +29,7 @@ import java.io.Serializable;
     public Customer() {
     }
 
+    
     public String getFirstname() {
         return firstname;
     }
@@ -44,12 +53,11 @@ import java.io.Serializable;
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    public int getMoney() {
+    public int getMoney(){
         return money;
     }
-
-    public void setMoney(int money) {
-        this.money = money;
+    public void setMoney(int money){
+      this.money = money;  
     }
 
     @Override
@@ -61,6 +69,14 @@ import java.io.Serializable;
                 + ", money=" + money
                 + '}';
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     
 }
-
